@@ -13,7 +13,7 @@ namespace WinInternetListener
         public bool IsConnected => _isConnected;
         public int CheckEvery { get; set; } = 2000;
         public event EventHandler? ConnectionLost;
-        public event EventHandler? ConnectionGained;
+        public event EventHandler? ConnectionRestored;
         private CancellationTokenSource? _cts;
 
         private InternetListener()
@@ -49,8 +49,8 @@ namespace WinInternetListener
                         _isConnected = temp;
 
                         if (_isConnected)
-                            ConnectionGained?.Invoke(this, EventArgs.Empty);
-                        else
+{                            ConnectionRestored?.Invoke(this, EventArgs.Empty);
+}                        else
                             ConnectionLost?.Invoke(this, EventArgs.Empty);
                     }
 
