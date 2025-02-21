@@ -2,12 +2,12 @@
 
 namespace WinInternetListener
 {
-    public class InternetListener
+    public class InternetListener : IDisposable
     {
         [DllImport("wininet.dll")]
         private static extern bool InternetGetConnectedState(out int description, int reservedValue);
         private static readonly Lazy<InternetListener> _instance = new(() => new());
-        public static InternetListener Value => _instance.Value;
+        public static InternetListener Instance => _instance.Value;
 
         private volatile bool _isConnected = true;
         public bool IsConnected => _isConnected;
@@ -65,6 +65,14 @@ namespace WinInternetListener
             {
                 Console.WriteLine($"Unexpected error in ListenAsync: {ex.Message}");
             }
+        }
+    
+        public void Dispose()
+        {
+            Stop();
+            ConnectionLost = null;
+            ConnectionRestored = null;
+            GC.SuppressFinalize(this);
         }
     }
 }
